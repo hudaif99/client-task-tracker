@@ -1,0 +1,111 @@
+.form {
+  display: grid;
+  gap: 0.75rem;
+  max-width: 32rem;
+  min-width: 0;
+  margin-block: 1rem 2rem;
+  line-height: 1.5;
+  overflow-wrap: anywhere;
+}
+
+.label {
+  font-weight: 600;
+}
+
+.input {
+  width: 100%;
+  min-height: 2.75rem;
+  padding: 0.625rem 0.75rem;
+  border: 1px solid currentColor;
+  border-radius: 0.375rem;
+  background: var(--background);
+  color: var(--foreground);
+  font: inherit;
+}
+
+.button,
+.secondary {
+  width: fit-content;
+  min-height: 2.75rem;
+  padding: 0.625rem 1rem;
+  border: 1px solid var(--foreground);
+  border-radius: 0.375rem;
+  font: inherit;
+  cursor: pointer;
+}
+
+.button {
+  background: var(--foreground);
+  color: var(--background);
+}
+
+.secondary {
+  background: var(--background);
+  color: var(--foreground);
+}
+
+.input:focus-visible,
+.button:focus-visible,
+.secondary:focus-visible {
+  outline: 3px solid var(--foreground);
+  outline-offset: 3px;
+}
+
+.input:disabled,
+.button:disabled,
+.secondary:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.secondary[aria-disabled="true"] {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin-top: 0.75rem;
+}
+
+.recovery {
+  overflow-wrap: anywhere;
+}
+
+.clientRow {
+  padding-block: 0.75rem;
+  overflow-wrap: anywhere;
+}
+
+.confirmation {
+  margin-block: 0.75rem;
+  padding: 1rem;
+  border: 1px solid currentColor;
+  border-radius: 0.375rem;
+  line-height: 1.5;
+}
+
+.rowHeading {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.rowHeading span {
+  min-width: 0;
+}
+
+.taskLink {
+  display: inline-block;
+  padding-block: 0.625rem;
+  text-decoration: underline;
+  text-underline-offset: 0.2em;
+}
+
+.taskLink:focus-visible {
+  outline: 3px solid currentColor;
+  outline-offset: 3px;
+}
