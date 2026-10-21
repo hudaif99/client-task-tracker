@@ -1,0 +1,360 @@
+.content {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 1rem max(1.25rem, calc((100% - 1160px) / 2));
+  background: var(--workspace-surface);
+  border-bottom: 1px solid var(--workspace-line);
+}
+
+.brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.7rem;
+  min-height: 2.75rem;
+  color: var(--workspace-ink);
+  font-size: 0.9375rem;
+  font-weight: 650;
+  letter-spacing: -0.025em;
+  text-decoration: none;
+}
+
+.brandMark {
+  width: 2rem;
+  height: 2rem;
+  flex-shrink: 0;
+  color: var(--workspace-accent);
+}
+
+.headerNote {
+  color: var(--workspace-muted);
+  font-size: 0.8125rem;
+}
+
+.main {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2.75rem 1.25rem 4rem;
+}
+
+.pageTop {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 2rem;
+  margin-bottom: 2.25rem;
+}
+
+.intro {
+  min-width: 0;
+}
+
+.intro h1, .heading {
+  font-size: clamp(1.875rem, 3.5vw, 2.5rem);
+  font-weight: 650;
+  line-height: 1.2;
+  letter-spacing: -0.045em;
+  text-wrap: pretty;
+}
+
+.intro > p {
+  margin-top: 0.65rem;
+  color: var(--workspace-muted);
+  max-width: 40rem;
+  font-size: 0.9375rem;
+}
+
+.account {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 0.9rem;
+  max-width: 28rem;
+  min-width: 0;
+  padding-top: 0.15rem;
+}
+
+.accountIdentity {
+  display: flex;
+  align-items: center;
+  min-width: 0;
+  gap: 0.65rem;
+}
+
+.avatar {
+  display: grid;
+  place-items: center;
+  flex: 0 0 2.5rem;
+  height: 2.5rem;
+  background: var(--workspace-tint);
+  color: var(--workspace-accent);
+  border: 1px solid var(--workspace-line);
+  border-radius: 50%;
+  font-weight: 600;
+  font-size: 0.875rem;
+}
+
+.accountInfo {
+  min-width: 0;
+}
+
+.accountName {
+  font-size: 0.8125rem;
+  font-weight: 600;
+}
+
+.accountEmail {
+  color: var(--workspace-muted);
+  font-size: 0.75rem;
+}
+
+.backLink {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  min-height: 2.75rem;
+  margin-bottom: 1.25rem;
+  color: var(--workspace-muted);
+  font-size: 0.875rem;
+  text-decoration: underline;
+  text-underline-offset: 0.25em;
+}
+
+.notice {
+  max-width: 40rem;
+  padding: 2rem;
+  background: var(--workspace-surface);
+  border: 1px solid var(--workspace-line);
+  border-radius: 1rem;
+}
+
+.notice h1 {
+  margin-bottom: 0.75rem;
+}
+
+.notice p {
+  color: var(--workspace-muted);
+  margin-block: 0.75rem;
+}
+
+.notice a {
+  display: inline-block;
+  min-height: 2.75rem;
+  padding-block: 0.6rem;
+  color: var(--workspace-accent);
+  text-decoration: underline;
+  text-underline-offset: 0.2em;
+}
+
+.loading {
+  padding: 2rem;
+  background: var(--workspace-surface);
+  border: 1px solid var(--workspace-line);
+  border-radius: 1rem;
+  color: var(--workspace-muted);
+}
+
+.authLayout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 440px);
+  gap: clamp(2rem, 7vw, 6rem);
+  align-items: center;
+  width: 100%;
+  max-width: 1100px;
+  margin: auto;
+  padding: 3.5rem 1.5rem;
+}
+
+.authStory {
+  max-width: 30rem;
+}
+
+.authSymbol {
+  display: inline-grid;
+  place-items: center;
+  width: 3rem;
+  height: 3rem;
+  margin-bottom: 1.75rem;
+  border-radius: 0.875rem;
+  color: var(--workspace-accent);
+  background: var(--workspace-tint);
+  font-size: 1.5rem;
+}
+
+.authStory h2 {
+  font-size: clamp(2rem, 3.5vw, 2.875rem);
+  font-weight: 600;
+  letter-spacing: -0.05em;
+  line-height: 1.2;
+}
+
+.authStory > p {
+  color: var(--workspace-muted);
+  margin-top: 1rem;
+}
+
+.authStory ul {
+  display: grid;
+  gap: 1rem;
+  margin-top: 2.5rem;
+  color: var(--workspace-muted);
+  font-size: 0.875rem;
+}
+
+.authStory li {
+  padding-left: 1rem;
+  border-left: 2px solid var(--workspace-accent);
+}
+
+.authCard {
+  min-width: 0;
+  background: var(--workspace-surface);
+  padding: 2.25rem;
+  border: 1px solid var(--workspace-line);
+  border-radius: 1.125rem;
+  box-shadow: 0 12px 40px rgb(23 62 64 / 4%);
+}
+
+.authCard h1 {
+  font-size: 1.75rem;
+  font-weight: 600;
+  letter-spacing: -0.04em;
+}
+
+.authDescription {
+  margin-top: 0.5rem;
+  color: var(--workspace-muted);
+  font-size: 0.875rem;
+}
+
+.authCard form {
+  max-width: none;
+  margin-block: 1.75rem 1.25rem;
+}
+
+.authCard form > button {
+  width: 100%;
+  margin-top: 0.5rem;
+}
+
+.authCard form > p:not([role="alert"]):not([role="status"]), .authCard > p:last-child {
+  color: var(--workspace-muted);
+  font-size: 0.8125rem;
+}
+
+.authCard a {
+  color: var(--workspace-accent);
+  text-decoration: underline;
+  text-underline-offset: 0.2em;
+}
+
+.authCard > [role="alert"] {
+  padding: 1rem;
+  margin-top: 1rem;
+  background: var(--workspace-danger-bg);
+  border-radius: 0.5rem;
+}
+
+.skipLink {
+  position: absolute;
+  z-index: 10;
+  left: 1rem;
+  top: 0;
+  padding: 0.75rem 1rem;
+  background: var(--workspace-surface);
+  color: var(--workspace-ink);
+  transform: translateY(-120%);
+}
+
+.skipLink:focus {
+  transform: translateY(0.5rem);
+}
+
+@media (max-width: 850px) {
+  .pageTop {
+    flex-direction: column-reverse;
+    gap: 1.5rem;
+  }
+
+  .account {
+    max-width: none;
+    justify-content: flex-start;
+  }
+
+  .authLayout {
+    grid-template-columns: minmax(0, 1fr);
+    max-width: 520px;
+    gap: 2rem;
+    padding-block: 2rem;
+  }
+
+  .authStory h2 {
+    font-size: 1.75rem;
+  }
+
+  .authStory ul, .authSymbol {
+    display: none;
+  }
+
+}
+
+@media (max-width: 480px) {
+  .header {
+    padding: 0.75rem 1rem;
+  }
+
+  .headerNote {
+    display: none;
+  }
+
+  .main {
+    padding: 1.5rem 1rem 3rem;
+  }
+
+  .pageTop {
+    margin-bottom: 1.5rem;
+  }
+
+  .account {
+    gap: 0.75rem;
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  .accountIdentity {
+    flex: 1 1 10rem;
+  }
+
+  .authLayout {
+    padding: 1.75rem 1rem;
+    gap: 1.5rem;
+  }
+
+  .authCard {
+    padding: 1.5rem 1.25rem;
+    border-radius: 0.875rem;
+  }
+
+  .authStory h2 {
+    font-size: 1.5rem;
+  }
+
+  .authStory > p {
+    font-size: 0.875rem;
+  }
+
+  .notice {
+    padding: 1.5rem;
+  }
+
+}

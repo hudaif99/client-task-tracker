@@ -1,0 +1,317 @@
+.workspace {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 320px;
+  align-items: start;
+  gap: 1.5rem;
+}
+
+.createPanel {
+  grid-column: 2;
+  grid-row: 1;
+  padding: 1.5rem;
+  background: var(--workspace-surface);
+  border: 1px solid var(--workspace-line);
+  border-top: 3px solid var(--workspace-accent);
+  border-radius: 0.875rem;
+}
+
+.panelHeading {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  margin-bottom: 0.75rem;
+}
+
+.panelHeading h2, .directoryHeading h2 {
+  font-size: 1.0625rem;
+  font-weight: 600;
+  letter-spacing: -0.025em;
+}
+
+.addMark {
+  display: inline-grid;
+  place-items: center;
+  width: 1.75rem;
+  height: 1.75rem;
+  background: var(--workspace-tint);
+  color: var(--workspace-accent);
+  border-radius: 0.4rem;
+  font-size: 1.25rem;
+}
+
+.createPanel > p {
+  color: var(--workspace-muted);
+  font-size: 0.875rem;
+}
+
+.createPanel form {
+  margin: 1.5rem 0 0;
+}
+
+.createPanel form > button {
+  margin-top: 0.5rem;
+  width: 100%;
+}
+
+.directory {
+  grid-column: 1;
+  grid-row: 1;
+  min-width: 0;
+  background: var(--workspace-surface);
+  border: 1px solid var(--workspace-line);
+  border-radius: 0.875rem;
+}
+
+.directoryHeading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 1.5rem 1.5rem 0;
+}
+
+.count {
+  color: var(--workspace-accent);
+  background: var(--workspace-tint);
+  border-radius: 0.4rem;
+  padding: 0.2rem 0.6rem;
+  font-size: 0.8125rem;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+.listHint {
+  padding: 0.4rem 1.5rem 1.25rem;
+  color: var(--workspace-muted);
+  font-size: 0.8125rem;
+}
+
+.clientList {
+  padding: 0;
+  list-style: none;
+}
+
+.clientList > li {
+  padding: 1.1rem 1.5rem;
+  border-top: 1px solid var(--workspace-line);
+}
+
+.clientHeading {
+  gap: 0.5rem;
+}
+
+.clientIdentity {
+  display: flex;
+  align-items: center;
+  flex: 1 1 10rem;
+  min-width: 0;
+  gap: 0.85rem;
+}
+
+.clientInitial {
+  display: inline-grid;
+  place-items: center;
+  flex: 0 0 2.625rem;
+  height: 2.625rem;
+  border-radius: 0.7rem;
+  background: var(--workspace-tint);
+  color: var(--workspace-accent);
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+.clientName {
+  font-size: 1rem;
+  font-weight: 550;
+  letter-spacing: -0.02em;
+}
+
+.directory .clientHeading button {
+  padding-inline: 0.75rem;
+  border-color: transparent;
+  background: transparent;
+}
+
+.directory .clientHeading .deleteAction {
+  color: var(--workspace-danger);
+}
+
+.directory .viewTasks {
+  min-height: 2.75rem;
+  padding: 0.625rem 0.85rem;
+  border-radius: 0.5rem;
+  color: var(--workspace-accent);
+  background: var(--workspace-tint);
+  font-size: 0.875rem;
+  font-weight: 550;
+  text-decoration: none;
+}
+
+.directory form {
+  margin: 1rem 0 0.5rem;
+  padding: 1.25rem;
+  max-width: none;
+  background: var(--workspace-bg);
+  border-radius: 0.65rem;
+}
+
+.directory .dangerButton {
+  background: var(--workspace-danger);
+  border-color: var(--workspace-danger);
+  color: var(--workspace-on-danger);
+}
+
+.directory [role="group"] p {
+  font-size: 0.875rem;
+}
+
+.empty {
+  padding: 2rem 1.5rem 2.75rem;
+  text-align: center;
+  border-top: 1px solid var(--workspace-line);
+}
+
+.emptyMark {
+  display: inline-grid;
+  place-items: center;
+  width: 3rem;
+  height: 3rem;
+  margin-bottom: 1rem;
+  color: var(--workspace-accent);
+  background: var(--workspace-tint);
+  border-radius: 0.8rem;
+  font-size: 1.75rem;
+}
+
+.empty h3 {
+  font-weight: 600;
+  font-size: 1rem;
+}
+
+.empty p {
+  max-width: 20rem;
+  margin: 0.5rem auto;
+  font-size: 0.875rem;
+  color: var(--workspace-muted);
+}
+
+.empty a, .notice button {
+  display: inline-block;
+  min-height: 2.75rem;
+  padding-block: 0.65rem;
+  color: var(--workspace-accent);
+  font-size: 0.875rem;
+  font-weight: 550;
+  text-decoration: underline;
+  text-underline-offset: 0.2em;
+}
+
+.notice {
+  max-width: 36rem;
+  padding: 1.5rem;
+  background: var(--workspace-surface);
+  border: 1px solid var(--workspace-line);
+  border-radius: 0.875rem;
+}
+
+.notice h2 {
+  font-weight: 600;
+}
+
+.notice p {
+  margin-top: 0.5rem;
+  color: var(--workspace-muted);
+}
+
+.notice button {
+  cursor: pointer;
+}
+
+.loading {
+  color: var(--workspace-muted);
+}
+
+.loading > div {
+  margin-top: 1.5rem;
+  padding: 0 1.5rem;
+  border: 1px solid var(--workspace-line);
+  border-radius: 0.875rem;
+  background: var(--workspace-surface);
+}
+
+.loading span {
+  display: block;
+  height: 4.5rem;
+  border-bottom: 1px solid var(--workspace-line);
+}
+
+.loading span:last-child {
+  border: 0;
+}
+
+@media (hover: hover) {
+  .directory .dangerButton:not(:disabled):hover {
+    background: var(--workspace-danger);
+    filter: brightness(0.9);
+  }
+
+  .viewTasks:hover {
+    text-decoration: underline;
+    text-underline-offset: 0.2em;
+  }
+
+}
+
+@media (max-width: 850px) {
+  .workspace {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .createPanel {
+    grid-column: 1;
+    grid-row: 1;
+  }
+
+  .directory {
+    grid-row: 2;
+  }
+
+  .createPanel form {
+    max-width: none;
+  }
+
+  .createPanel form > button {
+    width: fit-content;
+    min-width: 9rem;
+  }
+
+}
+
+@media (max-width: 480px) {
+  .createPanel {
+    padding: 1.25rem;
+  }
+
+  .directoryHeading {
+    padding: 1.25rem 1.25rem 0;
+    gap: 0.5rem;
+  }
+
+  .listHint {
+    padding-inline: 1.25rem;
+  }
+
+  .clientList > li {
+    padding: 1rem;
+  }
+
+  .clientIdentity {
+    flex-basis: 100%;
+    margin-bottom: 0.25rem;
+  }
+
+  .directory form {
+    padding: 1rem;
+  }
+
+}

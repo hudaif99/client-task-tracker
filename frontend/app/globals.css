@@ -1,8 +1,21 @@
 @import "tailwindcss";
-
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  color-scheme: light;
+  --background: #f3f6f7;
+  --foreground: #203542;
+  --workspace-bg: var(--background);
+  --workspace-ink: var(--foreground);
+  --workspace-surface: #ffffff;
+  --workspace-muted: #586b77;
+  --workspace-line: #dce5e8;
+  --workspace-input-line: #83959d;
+  --workspace-accent: #176d64;
+  --workspace-accent-hover: #10564f;
+  --workspace-on-accent: #ffffff;
+  --workspace-tint: #e7f2ef;
+  --workspace-danger: #a42d3b;
+  --workspace-danger-bg: #fff3f3;
+  --workspace-on-danger: #ffffff;
 }
 
 @theme inline {
@@ -12,15 +25,35 @@
   --font-mono: var(--font-geist-mono);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
-}
-
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-geist-sans), Arial, sans-serif;
+  line-height: 1.55;
+  overflow-wrap: anywhere;
+}
+
+:where(a, button, input, [tabindex]):focus-visible {
+  outline: 3px solid var(--workspace-accent);
+  outline-offset: 3px;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    color-scheme: dark;
+    --background: #132129;
+    --foreground: #e2ecef;
+    --workspace-surface: #1c2d36;
+    --workspace-muted: #afc0c8;
+    --workspace-line: #364b56;
+    --workspace-input-line: #718b98;
+    --workspace-accent: #9cd8c9;
+    --workspace-accent-hover: #b8e6da;
+    --workspace-on-accent: #12352f;
+    --workspace-tint: #263f40;
+    --workspace-danger: #f0acb6;
+    --workspace-danger-bg: #3b2932;
+    --workspace-on-danger: #3d1520;
+  }
+
 }

@@ -6,6 +6,7 @@ import { type Task, readDueDateResult, isDueDate } from "@/lib/tasks";
 import SessionExpired from "../../session-expired";
 import TaskDueIndicator from "./task-due-indicator";
 import styles from "../../create-client-form.module.css";
+import taskStyles from "./page.module.css";
 
 type State = { kind: "idle" | "saving" | "saved" | "uncertain" | "missing" } | { kind: "error"; message: string };
 
@@ -67,10 +68,10 @@ export default function TaskDueDateEditor({ task, apiUrl }: { task: Task; apiUrl
     } finally { submitting.current = false; }
   }
 
-  return <div aria-busy={busy}>
+  return <div className={taskStyles.taskEditor} aria-busy={busy}>
     {sessionExpired && <SessionExpired />}
     <div className={styles.rowHeading}>
-      <p>{task.due_date === null ? "No due date" : <>Due date: <time dateTime={task.due_date}>{task.due_date}</time></>}</p>
+      <p className={taskStyles.dateValue}>{task.due_date === null ? "No due date" : <>Due date: <time dateTime={task.due_date}>{task.due_date}</time></>}</p>
       <TaskDueIndicator task={{ status: task.status, due_date: task.due_date }} />
       {!editing && <button ref={editButton} type="button" className={styles.secondary}
         aria-label={`Edit due date: ${task.title}`} aria-disabled={locked} onClick={() => {

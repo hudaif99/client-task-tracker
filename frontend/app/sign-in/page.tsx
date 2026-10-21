@@ -2,6 +2,8 @@ import { Suspense } from "react";
 import { headers } from "next/headers";
 import { getClientsUrl } from "@/lib/backend-url";
 import SignInForm from "./sign-in-form";
+import AuthLayout from "../auth-layout";
+import Link from "next/link";
 
 async function SignIn() {
   let apiOrigin: string;
@@ -18,15 +20,13 @@ async function SignIn() {
     return <p>Use the local sign-in address: <a href={canonical.href}>Open sign-in on 127.0.0.1</a>.</p>;
   }
   return <>
-    <p>Sign in with your existing practice account.</p>
     <SignInForm apiOrigin={apiOrigin} />
-    <p>New here? <a href="/sign-up" style={{ textDecoration: "underline" }}>Create an account</a></p>
+    <p>New here? <Link href="/sign-up" prefetch={false}>Create an account</Link></p>
   </>;
 }
 
 export default function SignInPage() {
-  return <main style={{ width: "100%", padding: "2rem", maxWidth: "32rem", margin: "0 auto" }}>
-    <h1 style={{ fontSize: "1.75rem", fontWeight: 700 }}>Sign in</h1>
+  return <AuthLayout title="Sign in" description="Welcome back. Pick up where you left off.">
     <Suspense fallback={<p role="status">Loading sign-in…</p>}><SignIn /></Suspense>
-  </main>;
+  </AuthLayout>;
 }

@@ -18,9 +18,10 @@ test("sign-in errors avoid account disclosure and give rate-limit recovery", () 
 });
 
 test("signup checks blank names, password length boundaries and exact confirmation", () => {
-  for (const name of ["", " \t ", "A\0B"]) assert.equal(validateSignUp(name, "a".repeat(15), "a".repeat(15)).field, "name");
-  for (const length of [14, 129]) assert.equal(validateSignUp("Practice", "a".repeat(length), "a".repeat(length)).field, "password");
-  for (const length of [15, 128]) assert.equal(validateSignUp(" Practice ", "a".repeat(length), "a".repeat(length)), null);
+  for (const name of ["", " \t ", "A\0B"]) assert.equal(validateSignUp(name, "a".repeat(6), "a".repeat(6)).field, "name");
+  for (const length of [5, 129]) assert.equal(validateSignUp("Practice", "a".repeat(length), "a".repeat(length)).field, "password");
+  for (const length of [6, 128]) assert.equal(validateSignUp(" Practice ", "a".repeat(length), "a".repeat(length)), null);
+  assert.equal(validateSignUp("Practice", "short", "short").message, "Use a password between 6 and 128 characters.");
   assert.equal(validateSignUp("Practice", " leading-space-password ", " leading-space-password "), null);
   assert.equal(validateSignUp("Practice", " leading-space-password ", "leading-space-password").field, "confirmation");
 });

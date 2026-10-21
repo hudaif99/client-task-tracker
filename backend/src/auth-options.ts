@@ -26,7 +26,7 @@ export function createAuthOptions(database: Pool, env: NodeJS.ProcessEnv) {
     advanced: { ipAddress: { ipAddressHeaders: ["x-tracker-client-ip"] } },
     emailAndPassword: {
       enabled: true,
-      minPasswordLength: 15,
+      minPasswordLength: 6,
       maxPasswordLength: 128,
       // Local lesson only: add verification and password-reset delivery before public sign-ups.
       requireEmailVerification: false,

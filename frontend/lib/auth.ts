@@ -20,8 +20,8 @@ export function validateSignUp(name: string, password: string, confirmation: str
   { field: "name" | "password" | "confirmation"; message: string } | null {
   if (!name.trim() || name.includes("\0")) return { field: "name", message: "Enter your name." };
   // Match Better Auth's configured JavaScript string-length limits; don't trim passwords.
-  if (password.length < 15 || password.length > 128) {
-    return { field: "password", message: "Use a password between 15 and 128 characters." };
+  if (password.length < 6 || password.length > 128) {
+    return { field: "password", message: "Use a password between 6 and 128 characters." };
   }
   if (password !== confirmation) return { field: "confirmation", message: "The passwords do not match." };
   return null;

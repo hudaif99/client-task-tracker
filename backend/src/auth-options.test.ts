@@ -29,7 +29,7 @@ test("auth uses the supplied runtime pool, local trusted origin, explicit tables
     assert.deepEqual(options.trustedOrigins, ["http://127.0.0.1:3000"]);
     assert.deepEqual(options.advanced.ipAddress.ipAddressHeaders, ["x-tracker-client-ip"]);
     assert.equal(options.emailAndPassword.enabled, true);
-    assert.equal(options.emailAndPassword.minPasswordLength, 15);
+    assert.equal(options.emailAndPassword.minPasswordLength, 6);
     assert.equal(options.emailAndPassword.maxPasswordLength, 128);
     assert.equal(options.user.modelName, "auth_user");
     assert.equal(options.session.modelName, "auth_session");

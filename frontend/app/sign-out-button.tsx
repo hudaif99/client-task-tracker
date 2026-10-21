@@ -45,7 +45,7 @@ export default function SignOutButton({ apiOrigin }: { apiOrigin: string }) {
       }
     }
   }
-  return <div className={styles.form}>
+  return <div className={styles.signOut}>
     <button className={styles.secondary} type="button" disabled={busy} onClick={signOut}>
       {busy ? "Checking session…" : uncertain ? "Check sign-out" : "Sign out"}
     </button>

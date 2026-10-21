@@ -6,6 +6,7 @@ import SessionExpired from "./session-expired";
 import Link from "next/link";
 import { type Client, readUpdateClientResult, readDeleteClientResult } from "@/lib/clients";
 import styles from "./create-client-form.module.css";
+import directoryStyles from "./page.module.css";
 
 type SaveState =
   | { kind: "idle" }
@@ -147,10 +148,13 @@ export default function ClientRow({ client, apiUrl }: { client: Client; apiUrl: 
           </button>
         </div>
       ) : <>
-      <div className={styles.rowHeading}>
-        <span>{client.name}</span>
+      <div className={`${styles.rowHeading} ${directoryStyles.clientHeading}`}>
+        <div className={directoryStyles.clientIdentity}>
+          <span className={directoryStyles.clientInitial} aria-hidden="true">{Array.from(client.name.trim())[0]?.toLocaleUpperCase()}</span>
+          <span className={directoryStyles.clientName}>{client.name}</span>
+        </div>
         {!editing && !confirmingDelete && (<>
-          <Link href={`/clients/${client.id}`} className={styles.taskLink} aria-label={`Tasks for ${client.name}`}>Tasks</Link>
+          <Link href={`/clients/${client.id}`} className={`${styles.taskLink} ${directoryStyles.viewTasks}`} aria-label={`Tasks for ${client.name}`}>View tasks</Link>
           <button ref={editButton} type="button" className={styles.secondary}
             aria-label={`Edit ${client.name}`} aria-disabled={busy || sessionExpired} onClick={() => {
               if (busy || sessionExpired) return;
@@ -159,7 +163,7 @@ export default function ClientRow({ client, apiUrl }: { client: Client; apiUrl: 
               setEditing(true);
               requestAnimationFrame(() => input.current?.focus());
             }}>Edit</button>
-          <button ref={deleteButton} type="button" className={styles.secondary}
+          <button ref={deleteButton} type="button" className={`${styles.secondary} ${directoryStyles.deleteAction}`}
             aria-label={`Delete ${client.name}`} aria-disabled={busy || sessionExpired} onClick={() => {
               if (busy || sessionExpired) return;
               setDeleteState("idle");
@@ -185,7 +189,7 @@ export default function ClientRow({ client, apiUrl }: { client: Client; apiUrl: 
               disabled={busy} onClick={closeDeleteConfirmation}>
               {deleteState === "uncertain" ? "Close confirmation" : "Cancel"}
             </button>
-            <button type="button" className={styles.button}
+            <button type="button" className={`${styles.button} ${directoryStyles.dangerButton}`}
               disabled={sessionExpired || busy || deleteState === "uncertain"} onClick={deleteClient}>
               {deleteState === "deleting" ? "Deleting…" : taskCountToDelete !== null && taskCountToDelete > 0 ? "Delete client and tasks" : "Delete permanently"}
             </button>

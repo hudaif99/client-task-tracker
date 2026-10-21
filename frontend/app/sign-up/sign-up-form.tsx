@@ -108,7 +108,7 @@ export default function SignUpForm({ apiOrigin }: { apiOrigin: string }) {
       className={styles.input} value={password} onChange={event => setPassword(event.target.value)}
       disabled={locked} aria-invalid={invalidField === "password"}
       aria-describedby={`sign-up-password-hint${invalidField === "password" ? " sign-up-message" : ""}`} />
-    <p id="sign-up-password-hint">Use 15–128 characters.</p>
+    <p id="sign-up-password-hint">Use 6–128 characters.</p>
     <label className={styles.label} htmlFor="sign-up-confirmation">Confirm password</label>
     <input id="sign-up-confirmation" name="confirmation" type="password" autoComplete="new-password" required
       className={styles.input} value={confirmation} onChange={event => setConfirmation(event.target.value)}

@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import SessionExpired from "../../session-expired";
 import { type Task, readRenameTaskResult } from "@/lib/tasks";
 import styles from "../../create-client-form.module.css";
+import taskStyles from "./page.module.css";
 
 type SaveState =
   | { kind: "idle" | "saving" | "saved" | "uncertain" | "missing" }
@@ -84,10 +85,10 @@ export default function TaskTitleEditor({ task, apiUrl }: { task: Task; apiUrl: 
   }
 
   return (
-    <div aria-busy={busy}>
+    <div className={taskStyles.taskEditor} aria-busy={busy}>
       {sessionExpired && <SessionExpired />}
       <div className={styles.rowHeading}>
-        <span>{task.title}</span>
+        <span className={taskStyles.titleText}>{task.title}</span>
         {!editing && (
           <button ref={editButton} type="button" className={styles.secondary}
             aria-label={`Edit title: ${task.title}`} aria-disabled={locked} onClick={() => {

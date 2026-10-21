@@ -8,6 +8,8 @@ import ClientRow from "./client-row";
 import { sessionHeaders } from "@/lib/server-session";
 import { readUser, type User } from "@/lib/auth";
 import Account from "./account";
+import styles from "./page.module.css";
+import workspace from "./workspace.module.css";
 
 async function ClientsList() {
   // Fetch live data after a page request, rather than during the build.
@@ -53,9 +55,11 @@ async function ClientsList() {
     );
 
     return (
-      <p role="alert">
-        Unable to load clients. Please refresh the page to try again.
-      </p>
+      <div className={styles.notice} role="alert">
+        <h2>Clients couldn’t be loaded</h2>
+        <p>Check your connection and refresh the page to try again.</p>
+        <form action="/" method="get"><button type="submit">Reload clients</button></form>
+      </div>
     );
   }
 
@@ -65,33 +69,55 @@ async function ClientsList() {
 
   return (
     <>
-      <Account user={user} apiOrigin={new URL(apiUrl).origin} />
-      <h2 style={{ marginTop: "1.5rem", fontWeight: 600 }}>Add a client</h2>
-      <CreateClientForm apiUrl={apiUrl} />
-      <h2 id="clients-heading" tabIndex={-1} style={{ fontWeight: 600 }}>Clients</h2>
-      {clients.length === 0 ? <p>No clients yet.</p> :
-        <section aria-label="Client list">
-          <p>Showing up to 50 clients, newest first.</p>
-
-          <ul style={{ listStyle: "disc", paddingLeft: "1.5rem" }}>
+      <div className={workspace.pageTop}>
+        <div className={workspace.intro}>
+          <h1>Clients</h1>
+          <p>A place for your clients and the work you do for them.</p>
+        </div>
+        <Account user={user} apiOrigin={new URL(apiUrl).origin} />
+      </div>
+      <div className={styles.workspace}>
+        <section className={styles.createPanel} aria-labelledby="add-client-heading">
+          <div className={styles.panelHeading}>
+            <span className={styles.addMark} aria-hidden="true">+</span>
+            <h2 id="add-client-heading">Add a client</h2>
+          </div>
+          <p>Start with a name. Add their tasks when you’re ready.</p>
+          <CreateClientForm apiUrl={apiUrl} />
+        </section>
+        <section className={styles.directory} aria-label="Client list">
+          <div className={styles.directoryHeading}>
+            <h2 id="clients-heading" tabIndex={-1}>Your clients</h2>
+            <span className={styles.count}>{clients.length} shown</span>
+          </div>
+          <p className={styles.listHint}>Showing up to 50 clients, newest first.</p>
+          {clients.length === 0 ? (
+            <div className={styles.empty}>
+              <span className={styles.emptyMark} aria-hidden="true">+</span>
+              <h3>No clients yet.</h3>
+              <p>Add your first client to start keeping their tasks together.</p>
+              <a href="#client-name">Add your first client</a>
+            </div>
+          ) : <ul className={styles.clientList}>
             {clients.map((client) => (
               <ClientRow key={client.id} client={{ id: client.id, name: client.name }} apiUrl={apiUrl} />
             ))}
-          </ul>
+          </ul>}
         </section>
-      }
+      </div>
     </>
   );
 }
 
 export default function Home() {
   return (
-    <main style={{ width: "100%", padding: "2rem", maxWidth: "48rem", margin: "0 auto" }}>
-      <h1 style={{ fontSize: "1.75rem", fontWeight: 700 }}>
-        Client &amp; Task Tracker
-      </h1>
-
-      <Suspense fallback={<p role="status">Loading clients…</p>}>
+    <main className={workspace.main}>
+      <Suspense fallback={
+        <div className={styles.loading} role="status">
+          <p>Loading clients…</p>
+          <div aria-hidden="true"><span /><span /><span /></div>
+        </div>
+      }>
         <ClientsList />
       </Suspense>
     </main>
