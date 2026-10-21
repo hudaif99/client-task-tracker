@@ -24,12 +24,13 @@ type CreateClientResult =
 
 export function readCreateClientResult(
   status: number,
-  payload: unknown
+  payload: unknown,
+  requestedName: string
 ): CreateClientResult {
   if (
     status === 201 &&
     typeof payload === "object" && payload !== null &&
-    "data" in payload && isClient(payload.data)
+    "data" in payload && isClient(payload.data) && payload.data.name === requestedName
   ) {
     return { kind: "created", client: payload.data };
   }
@@ -56,13 +57,14 @@ export function readCreateClientResult(
   return { kind: "uncertain" };
 }
 
-export function readUpdateClientResult(status: number, payload: unknown, expectedId: number):
+export function readUpdateClientResult(status: number, payload: unknown, expectedId: number, requestedName: string):
   | { kind: "updated"; client: Client }
   | { kind: "rejected"; message: string }
   | { kind: "uncertain" } {
   if (
     status === 200 && typeof payload === "object" && payload !== null &&
-    "data" in payload && isClient(payload.data) && payload.data.id === expectedId
+    "data" in payload && isClient(payload.data) && payload.data.id === expectedId &&
+    payload.data.name === requestedName
   ) {
     return { kind: "updated", client: payload.data };
   }
@@ -75,7 +77,7 @@ export function readUpdateClientResult(status: number, payload: unknown, expecte
     return { kind: "rejected", message: "This client no longer exists. Refresh the page to update the list." };
   }
 
-  const result = readCreateClientResult(status, payload);
+  const result = readCreateClientResult(status, payload, requestedName);
   return result.kind === "rejected" ? result : { kind: "uncertain" };
 }
 

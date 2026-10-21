@@ -69,7 +69,7 @@ export default function CreateTaskForm({ apiUrl, clientId }: { apiUrl: string; c
         return;
       }
       const payload: unknown = await response.json();
-      const result = readCreateTaskResult(response.status, payload, clientId, requestedDate);
+      const result = readCreateTaskResult(response.status, payload, clientId, cleanTitle, requestedDate);
       if (result.kind === "created") {
         setTitle("");
         setDueDate("");

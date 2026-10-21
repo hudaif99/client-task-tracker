@@ -81,20 +81,20 @@ test("accepts only tasks belonging to the requested client with known statuses",
 });
 
 test("confirms task creation only for a valid pending task and status 201", () => {
-  assert.deepEqual(readCreateTaskResult(201, { data: task }, 5), { kind: "created", task });
+  assert.deepEqual(readCreateTaskResult(201, { data: task }, 5, task.title), { kind: "created", task });
   for (const [status, payload] of [[200, { data: task }], [201, {}], [201, { data: { ...task, client_id: 6 } }],
     [201, { data: { ...task, status: "completed" } }], [500, {}], [404, {}]]) {
-    assert.deepEqual(readCreateTaskResult(status, payload, 5), { kind: "uncertain" });
+    assert.deepEqual(readCreateTaskResult(status, payload, 5, task.title), { kind: "uncertain" });
   }
 });
 
 test("handles task validation and deleted clients without exposing server details", () => {
-  const invalid = readCreateTaskResult(400, { error: { code: "INVALID_TASK_TITLE", message: "private detail" } }, 5);
+  const invalid = readCreateTaskResult(400, { error: { code: "INVALID_TASK_TITLE", message: "private detail" } }, 5, task.title);
   assert.equal(invalid.kind, "rejected");
   assert.equal(invalid.message.includes("private detail"), false);
-  assert.deepEqual(readCreateTaskResult(404, { error: { code: "CLIENT_NOT_FOUND" } }, 5), { kind: "missing" });
-  assert.equal(readCreateTaskResult(413, {}, 5).kind, "rejected");
-  assert.equal(readCreateTaskResult(415, {}, 5).kind, "rejected");
+  assert.deepEqual(readCreateTaskResult(404, { error: { code: "CLIENT_NOT_FOUND" } }, 5, task.title), { kind: "missing" });
+  assert.equal(readCreateTaskResult(413, {}, 5, task.title).kind, "rejected");
+  assert.equal(readCreateTaskResult(415, {}, 5, task.title).kind, "rejected");
 });
 
 test("confirms task updates only for the requested client, task, and status", () => {
@@ -148,10 +148,21 @@ test("calendar due dates allow null and valid leap days, rejecting shifts and ma
 
 test("creation verifies the exact requested due date, including an intentionally blank date", () => {
   const dated = { ...task, due_date: "2026-10-31" };
-  assert.equal(readCreateTaskResult(201, { data: dated }, 5, "2026-10-31").kind, "created");
-  assert.equal(readCreateTaskResult(201, { data: dated }, 5, null).kind, "uncertain");
-  assert.equal(readCreateTaskResult(201, { data: task }, 5, "2026-10-31").kind, "uncertain");
-  assert.equal(readCreateTaskResult(400, { error: { code: "INVALID_TASK_DUE_DATE", message: "internal detail" } }, 5).kind, "rejected");
+  assert.equal(readCreateTaskResult(201, { data: dated }, 5, task.title, "2026-10-31").kind, "created");
+  assert.equal(readCreateTaskResult(201, { data: dated }, 5, task.title, null).kind, "uncertain");
+  assert.equal(readCreateTaskResult(201, { data: task }, 5, task.title, "2026-10-31").kind, "uncertain");
+  assert.equal(readCreateTaskResult(400, { error: { code: "INVALID_TASK_DUE_DATE", message: "internal detail" } }, 5, task.title).kind, "rejected");
+});
+
+test("task creation confirms the exact submitted title for dated and undated tasks", () => {
+  const requestedTitle = "Review café 🦋";
+  for (const dueDate of [null, "2026-10-31"]) {
+    const created = { ...task, title: requestedTitle, due_date: dueDate };
+    assert.equal(readCreateTaskResult(201, { data: created }, 5, requestedTitle, dueDate).kind, "created");
+    for (const title of ["Different task", "REVIEW CAFÉ 🦋", ` ${requestedTitle} `, "Review cafe\u0301 🦋"]) {
+      assert.deepEqual(readCreateTaskResult(201, { data: { ...created, title } }, 5, requestedTitle, dueDate), { kind: "uncertain" });
+    }
+  }
 });
 
 test("due date saves and clears require matching task, client and exact date", () => {

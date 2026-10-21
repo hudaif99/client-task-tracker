@@ -63,7 +63,7 @@ export default function CreateClientForm({ apiUrl }: { apiUrl: string }) {
         return;
       }
       const payload: unknown = await response.json();
-      const result = readCreateClientResult(response.status, payload);
+      const result = readCreateClientResult(response.status, payload, cleanName);
 
       if (result.kind === "created") {
         setName("");

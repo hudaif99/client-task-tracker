@@ -115,7 +115,7 @@ export default function ClientRow({ client, apiUrl }: { client: Client; apiUrl: 
         return;
       }
       const payload: unknown = await response.json();
-      const result = readUpdateClientResult(response.status, payload, client.id);
+      const result = readUpdateClientResult(response.status, payload, client.id, cleanName);
       if (result.kind === "updated") {
         setState({ kind: "success", message: `Name changed to ${result.client.name}.` });
         closeEditor();

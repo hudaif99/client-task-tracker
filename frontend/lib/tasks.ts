@@ -92,7 +92,7 @@ export function isTaskForClient(value: unknown, clientId: number): value is Task
   );
 }
 
-export function readCreateTaskResult(status: number, payload: unknown, clientId: number, dueDate: string | null = null):
+export function readCreateTaskResult(status: number, payload: unknown, clientId: number, requestedTitle: string, dueDate: string | null = null):
   | { kind: "created"; task: Task }
   | { kind: "rejected"; message: string }
   | { kind: "missing" }
@@ -100,7 +100,7 @@ export function readCreateTaskResult(status: number, payload: unknown, clientId:
   if (
     status === 201 && typeof payload === "object" && payload !== null &&
     "data" in payload && isTaskForClient(payload.data, clientId) && payload.data.status === "pending" &&
-    payload.data.due_date === dueDate
+    payload.data.title === requestedTitle && payload.data.due_date === dueDate
   ) {
     return { kind: "created", task: payload.data };
   }
