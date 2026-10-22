@@ -65,5 +65,6 @@ npm.cmd --prefix frontend test
 npm.cmd --prefix frontend run build
 ```
 
-This project is intended for local learning. Public deployment requires further
-configuration, including email verification and password-reset delivery.
+This project is intended for learning. See [the VPS deployment guide](deploy/README.md)
+for single-server HTTPS configuration. Practice signup remains available; email
+verification and password-reset delivery still need implementation before real-user use.

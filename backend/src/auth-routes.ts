@@ -11,10 +11,11 @@ export function createAuthRoutes(service: AuthService) {
   const routes = express.Router();
   routes.use((req, res, next) => {
     res.set("Cache-Control", "no-store");
-    // Direct local server: derive the rate-limit address from the connection,
-    // replacing client-supplied values. Revisit when deploying behind a proxy.
+    // Express uses the socket unless loopback-proxy trust is explicitly enabled.
+    // Never pass the caller's internal rate-limit header through to Better Auth.
     delete req.headers["x-tracker-client-ip"];
-    if (req.socket.remoteAddress) req.headers["x-tracker-client-ip"] = req.socket.remoteAddress;
+    const clientIp = req.ip ?? req.socket.remoteAddress;
+    if (clientIp) req.headers["x-tracker-client-ip"] = clientIp;
     next();
   });
 

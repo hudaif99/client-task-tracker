@@ -2,6 +2,7 @@ import assert from "node:assert/strict";
 import { once } from "node:events";
 import test from "node:test";
 import { createApp } from "./app.ts";
+import { readDeploymentOptions } from "./deployment-options.ts";
 
 // No real database or auth service is imported. These fixtures also check
 // that each SQL operation binds the session owner at its query boundary.
@@ -78,7 +79,7 @@ function database() {
   return { clients, tasks, calls, pool: { query, connect: async () => ({ query, release() {} }) } };
 }
 
-async function fixture(run) {
+async function fixture(run, deployment) {
   const db = database();
   const app = createApp(db.pool, {
     handler: async () => new Response(null, { status: 404 }),
@@ -88,7 +89,7 @@ async function fixture(run) {
       const id = cookie === "session=alice" ? "alice" : cookie === "session=bob" ? "bob" : null;
       return id ? { id, name: id, email: `${id}@example.invalid` } : null;
     },
-  });
+  }, deployment);
   const server = app.listen(0, "127.0.0.1");
   try {
     await once(server, "listening");
@@ -265,4 +266,50 @@ test("session failures and untrusted browser writes fail closed", async () => {
     const allowed = await request("PATCH", "/clients/1", { body: { name: "Allowed" }, headers: { Origin: "http://127.0.0.1:3000" } });
     assert.equal(allowed.status, 200);
   });
+});
+
+test("hosted CORS and resource writes use the configured HTTPS origin while retaining ownership checks", async () => {
+  const origin = "https://tracker.example";
+  await fixture(async (db, request) => {
+    for (const denied of ["http://127.0.0.1:3000", "https://evil.example", "null"]) {
+      const result = await request("PATCH", "/clients/1", { body: { name: "Blocked" }, headers: { Origin: denied } });
+      assert.equal(result.status, 403);
+      assert.equal(result.headers.get("access-control-allow-origin"), null);
+    }
+    assert.equal(db.calls.length, 0);
+    const headers = { Origin: origin, "Sec-Fetch-Site": "same-origin" };
+    const unauthorized = await request("PATCH", "/clients/1", { user: null, body: { name: "Blocked" }, headers });
+    assert.equal(unauthorized.status, 401);
+    const otherOwner = await request("PATCH", "/clients/2", { body: { name: "Blocked" }, headers });
+    assert.equal(otherOwner.status, 404);
+    const allowed = await request("PATCH", "/clients/1", { body: { name: "Allowed" }, headers });
+    assert.equal(allowed.status, 200);
+    assert.equal(allowed.headers.get("access-control-allow-origin"), origin);
+    assert.equal(allowed.headers.get("access-control-allow-credentials"), "true");
+    const crossSite = await request("PATCH", "/clients/1", {
+      body: { name: "Blocked" }, headers: { ...headers, "Sec-Fetch-Site": "cross-site" },
+    });
+    assert.equal(crossSite.status, 403);
+    assert.equal(db.clients[1].name, "Bob client");
+  }, readDeploymentOptions({ BETTER_AUTH_URL: origin }));
+});
+
+test("auth rate-limit identity ignores spoofed internal headers and opts into loopback proxy trust only", async () => {
+  for (const trust of [false, true]) {
+    const app = createApp(database().pool, {
+      getUser: async () => null,
+      handler: async request => Response.json({ ip: request.headers.get("x-tracker-client-ip") }),
+    }, readDeploymentOptions({ BETTER_AUTH_URL: "https://tracker.example", TRUST_LOOPBACK_PROXY: String(trust) }));
+    const server = app.listen(0, "127.0.0.1");
+    try {
+      await once(server, "listening");
+      const response = await fetch(`http://127.0.0.1:${server.address().port}/api/auth/check`, {
+        headers: { "X-Forwarded-For": "198.51.100.8, 203.0.113.9", "X-Tracker-Client-IP": "192.0.2.99" },
+      });
+      assert.equal(response.status, 200);
+      assert.deepEqual(await response.json(), { ip: trust ? "203.0.113.9" : "127.0.0.1" });
+    } finally {
+      await new Promise(resolve => server.close(resolve));
+    }
+  }
 });

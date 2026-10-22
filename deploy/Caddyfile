@@ -1,0 +1,23 @@
+# Replace tracker.example with the hostname configured in both application env files.
+tracker.example {
+    @clientApi path /api/clients /api/clients/*
+    # Keep the specific client API handler ahead of the general /api/* handler.
+    route {
+        handle @clientApi {
+            uri strip_prefix /api
+            reverse_proxy 127.0.0.1:4000 {
+                header_up X-Forwarded-For {remote_host}
+            }
+        }
+
+        handle /api/* {
+            reverse_proxy 127.0.0.1:4000 {
+                header_up X-Forwarded-For {remote_host}
+            }
+        }
+
+        handle {
+            reverse_proxy 127.0.0.1:3000
+        }
+    }
+}

@@ -8,7 +8,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
-    "test": "node --test lib/clients.test.mjs lib/tasks.test.mjs lib/auth.test.mjs"
+    "test": "node --test lib/clients.test.mjs lib/tasks.test.mjs lib/auth.test.mjs lib/api-urls.test.mjs"
   },
   "dependencies": {
     "next": "16.4.2",

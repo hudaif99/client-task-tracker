@@ -2,7 +2,7 @@ import { Suspense } from "react";
 import { connection } from "next/server";
 import { redirect } from "next/navigation";
 import { type Client, isClient } from "@/lib/clients";
-import { getClientsUrl } from "@/lib/backend-url";
+import { getClientsUrl, getBrowserClientsUrl, getBrowserApiOrigin } from "@/lib/backend-url";
 import CreateClientForm from "./create-client-form";
 import ClientRow from "./client-row";
 import { sessionHeaders } from "@/lib/server-session";
@@ -16,15 +16,18 @@ async function ClientsList() {
   await connection();
   let clients: Client[] = [];
   let apiUrl = "";
+  let apiOrigin = "";
   let user: User | null = null;
   let signedOut = false;
 
   try {
-    apiUrl = getClientsUrl();
+    const serverUrl = getClientsUrl();
+    apiUrl = getBrowserClientsUrl();
+    apiOrigin = getBrowserApiOrigin();
     const headers = await sessionHeaders();
     const [response, identity] = await Promise.all([
-      fetch(apiUrl, { headers, cache: "no-store", signal: AbortSignal.timeout(5000) }),
-      fetch(new URL("/api/me", apiUrl), { headers, cache: "no-store", signal: AbortSignal.timeout(5000) }),
+      fetch(serverUrl, { headers, cache: "no-store", signal: AbortSignal.timeout(5000) }),
+      fetch(new URL("/api/me", serverUrl), { headers, cache: "no-store", signal: AbortSignal.timeout(5000) }),
     ]);
 
     if (response.status === 401 || identity.status === 401) {
@@ -74,7 +77,7 @@ async function ClientsList() {
           <h1>Clients</h1>
           <p>A place for your clients and the work you do for them.</p>
         </div>
-        <Account user={user} apiOrigin={new URL(apiUrl).origin} />
+        <Account user={user} apiOrigin={apiOrigin} />
       </div>
       <div className={styles.workspace}>
         <section className={styles.createPanel} aria-labelledby="add-client-heading">

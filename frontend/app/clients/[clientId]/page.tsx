@@ -5,7 +5,7 @@ import { notFound, redirect } from "next/navigation";
 import { sessionHeaders } from "@/lib/server-session";
 import { readUser, type User } from "@/lib/auth";
 import Account from "../../account";
-import { getClientsUrl } from "@/lib/backend-url";
+import { getClientsUrl, getBrowserClientsUrl, getBrowserApiOrigin } from "@/lib/backend-url";
 import { type Client, isClient } from "@/lib/clients";
 import { type Task, type TaskFilter, readTaskClientId, readTaskFilter, readTaskCursor, getTaskQuery, readTaskPage } from "@/lib/tasks";
 import CreateTaskForm from "./create-task-form";
@@ -60,16 +60,18 @@ async function ClientTasks({ params, searchParams }: PageProps) {
   let tasks: Task[] = [];
   let nextBeforeId: number | null = null;
   let apiUrl = "";
+  let apiOrigin = "";
   let missing = false;
   let signedOut = false;
   let user: User | null = null;
   try {
     const clientUrl = `${getClientsUrl()}/${clientId}`;
-    apiUrl = `${clientUrl}/tasks`;
+    apiUrl = `${getBrowserClientsUrl()}/${clientId}/tasks`;
+    apiOrigin = getBrowserApiOrigin();
     const headers = await sessionHeaders();
     const [clientResponse, tasksResponse, identity] = await Promise.all([
       fetch(clientUrl, { headers, cache: "no-store", signal: AbortSignal.timeout(5000) }),
-      fetch(`${apiUrl}${query}`, { headers, cache: "no-store", signal: AbortSignal.timeout(5000) }),
+      fetch(`${clientUrl}/tasks${query}`, { headers, cache: "no-store", signal: AbortSignal.timeout(5000) }),
       fetch(new URL("/api/me", clientUrl), { headers, cache: "no-store", signal: AbortSignal.timeout(5000) }),
     ]);
 
@@ -118,7 +120,7 @@ async function ClientTasks({ params, searchParams }: PageProps) {
           <h1>Tasks for {client.name}</h1>
           <p>Keep the next step clear, one task at a time.</p>
         </div>
-        {user && <Account user={user} apiOrigin={new URL(apiUrl).origin} />}
+        {user && <Account user={user} apiOrigin={apiOrigin} />}
       </div>
       <div className={styles.grid}>
         <section className={styles.createPanel} aria-label="Add a task">

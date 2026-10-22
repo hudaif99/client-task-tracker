@@ -5,15 +5,21 @@ import { readClientId, readClientName, readTaskDeletionConfirmation } from "./cl
 import { deleteClientWithTasks } from "./delete-client.ts";
 import { requestErrorHandler } from "./request-errors.ts";
 import { createTaskRoutes } from "./task-routes.ts";
-import { requireSession, ownerId, frontendOrigins } from "./require-session.ts";
+import { requireSession, ownerId } from "./require-session.ts";
 import { createAuthRoutes, type AuthService } from "./auth-routes.ts";
+import { localDeploymentOptions, type DeploymentOptions } from "./deployment-options.ts";
 
-export function createApp(db: Pick<Pool, "query" | "connect">, authService: AuthService) {
+export function createApp(
+  db: Pick<Pool, "query" | "connect">,
+  authService: AuthService,
+  deployment: DeploymentOptions = localDeploymentOptions,
+) {
   const app = express();
+  // server.ts binds only to loopback; Caddy must overwrite forwarded client headers.
+  app.set("trust proxy", deployment.trustLoopbackProxy ? "loopback" : false);
 
-  // Local development origins; update these when deployment URLs are chosen.
   app.use(cors({
-    origin: frontendOrigins,
+    origin: deployment.frontendOrigins,
     methods: ["GET", "POST", "PATCH", "DELETE"],
     allowedHeaders: ["Content-Type"],
     credentials: true,
@@ -38,7 +44,7 @@ export function createApp(db: Pick<Pool, "query" | "connect">, authService: Auth
   });
 
   // This prefix covers every client route and its nested task routes.
-  app.use("/clients", requireSession(authService.getUser));
+  app.use("/clients", requireSession(authService.getUser, deployment.frontendOrigins));
   app.get("/clients", async (_req, res) => {
     try {
       const result = await db.query<ClientRow>(`

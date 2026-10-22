@@ -2,6 +2,7 @@ import assert from "node:assert/strict";
 import test from "node:test";
 import pg from "pg";
 import { createAuthOptions } from "./auth-options.ts";
+import { readDeploymentOptions } from "./deployment-options.ts";
 
 const env = { BETTER_AUTH_SECRET: "a".repeat(64), BETTER_AUTH_URL: "http://127.0.0.1:4000" };
 
@@ -11,9 +12,29 @@ test("auth configuration rejects missing/short secrets and unexpected local URLs
     for (const secret of [undefined, "", "private-short-key", ` ${env.BETTER_AUTH_SECRET}`]) {
       assert.throws(() => createAuthOptions(pool, { ...env, BETTER_AUTH_SECRET: secret }), /Set BETTER_AUTH_SECRET/);
     }
-    for (const url of [undefined, "", "not a URL", "http://localhost:4000", "https://example.com",
-      "http://127.0.0.1:4000/path", "http://127.0.0.1:4000?x=1", "http://user:private@127.0.0.1:4000"]) {
+    for (const url of [undefined, "", "not a URL", "http://localhost:4000", "http://example.com",
+      "http://127.0.0.1:4000/path", "http://127.0.0.1:4000?x=1", "http://user:private@127.0.0.1:4000",
+      "https://example.com/path", "https://example.com?x=1", "https://example.com#fragment",
+      "https://private:secret@example.com", " https://example.com", "https://example.com?", "https://example.com#"]) {
       assert.throws(() => createAuthOptions(pool, { ...env, BETTER_AUTH_URL: url }), /Set BETTER_AUTH_URL/);
+    }
+  } finally {
+    await pool.end();
+  }
+});
+
+test("HTTPS deployment trusts only its configured origin and validates proxy opt-in", async () => {
+  const pool = new pg.Pool();
+  try {
+    const options = createAuthOptions(pool, { ...env, BETTER_AUTH_URL: "https://tracker.example/" });
+    assert.equal(options.baseURL, "https://tracker.example");
+    assert.deepEqual(options.trustedOrigins, ["https://tracker.example"]);
+    assert.equal(options.emailAndPassword.requireEmailVerification, false);
+    assert.equal(readDeploymentOptions(env).trustLoopbackProxy, false);
+    assert.equal(readDeploymentOptions({ ...env, TRUST_LOOPBACK_PROXY: "false" }).trustLoopbackProxy, false);
+    assert.equal(readDeploymentOptions({ ...env, TRUST_LOOPBACK_PROXY: "true" }).trustLoopbackProxy, true);
+    for (const value of ["", "yes", "1", "TRUE"]) {
+      assert.throws(() => readDeploymentOptions({ ...env, TRUST_LOOPBACK_PROXY: value }), /TRUST_LOOPBACK_PROXY/);
     }
   } finally {
     await pool.end();

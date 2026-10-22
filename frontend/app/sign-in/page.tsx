@@ -1,14 +1,16 @@
 import { Suspense } from "react";
 import { headers } from "next/headers";
-import { getClientsUrl } from "@/lib/backend-url";
+import { connection } from "next/server";
+import { getBrowserApiOrigin } from "@/lib/backend-url";
 import SignInForm from "./sign-in-form";
 import AuthLayout from "../auth-layout";
 import Link from "next/link";
 
 async function SignIn() {
+  await connection();
   let apiOrigin: string;
   try {
-    apiOrigin = new URL(getClientsUrl()).origin;
+    apiOrigin = getBrowserApiOrigin();
   } catch {
     return <p role="alert">Sign-in is unavailable. Please try again later.</p>;
   }

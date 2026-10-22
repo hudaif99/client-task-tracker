@@ -1,21 +1,18 @@
 import "server-only";
+import { readApiUrls } from "./api-urls";
 
-export function getClientsUrl(): string {
-  const baseUrl = process.env.API_BASE_URL;
-
-  if (!baseUrl) {
-    throw new Error("Missing API_BASE_URL");
-  }
-
-  const url = new URL("/clients", baseUrl);
-
-  if (
-    (url.protocol !== "http:" && url.protocol !== "https:") ||
-    url.username || url.password
-  ) {
-    throw new Error("API_BASE_URL must be an HTTP(S) address without credentials");
-  }
-
-  return url.toString();
+function apiUrls() {
+  return readApiUrls({ API_BASE_URL: process.env.API_BASE_URL, APP_ORIGIN: process.env.APP_ORIGIN });
 }
 
+export function getClientsUrl(): string {
+  return apiUrls().internalClients;
+}
+
+export function getBrowserClientsUrl(): string {
+  return apiUrls().browserClients;
+}
+
+export function getBrowserApiOrigin(): string {
+  return apiUrls().browserAuthOrigin;
+}

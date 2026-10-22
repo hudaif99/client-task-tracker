@@ -1,10 +1,12 @@
 import type { RequestHandler, Response } from "express";
 import { fromNodeHeaders } from "better-auth/node";
 import type { AuthService } from "./auth-routes.ts";
+import { localDeploymentOptions } from "./deployment-options.ts";
 
-export const frontendOrigins = ["http://localhost:3000", "http://127.0.0.1:3000"];
-
-export function requireSession(getUser: AuthService["getUser"]): RequestHandler {
+export function requireSession(
+  getUser: AuthService["getUser"],
+  frontendOrigins = localDeploymentOptions.frontendOrigins,
+): RequestHandler {
   return async (req, res, next) => {
     res.set("Cache-Control", "no-store");
     // Cookie-authenticated writes must reject untrusted browser origins.

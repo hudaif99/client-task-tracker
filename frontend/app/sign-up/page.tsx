@@ -1,13 +1,15 @@
 import { Suspense } from "react";
 import { headers } from "next/headers";
-import { getClientsUrl } from "@/lib/backend-url";
+import { connection } from "next/server";
+import { getBrowserApiOrigin } from "@/lib/backend-url";
 import SignUpForm from "./sign-up-form";
 import AuthLayout from "../auth-layout";
 
 async function SignUp() {
+  await connection();
   let apiOrigin: string;
   try {
-    apiOrigin = new URL(getClientsUrl()).origin;
+    apiOrigin = getBrowserApiOrigin();
   } catch {
     return <p role="alert">Account creation is unavailable. Please try again later.</p>;
   }
